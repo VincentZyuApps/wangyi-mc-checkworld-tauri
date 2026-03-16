@@ -118,12 +118,16 @@ jobs:
           mkdir -p release
           mkdir -p release-portable
           
-          # Copy exe
-          cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release/
-          cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release-portable/
+          # Rename and copy exe with version + Windows x64
+          cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release/wangyi-mc-checkworld-v${VERSION}-windows-x64.exe
+          cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release-portable/wangyi-mc-checkworld-v${VERSION}-windows-x64.exe
           
-          # Copy MSI installer
-          cp src-tauri/target/release/bundle/msi/*.msi release/
+          # Copy MSI and rename with version
+          for msi in src-tauri/target/release/bundle/msi/*.msi; do
+            base=$(basename "$msi" .msi)
+            newname="${base}-v${VERSION}-x64_en-US.msi"
+            cp "$msi" release/"$newname"
+          done
           
           # Copy README
           cp README.md release/ 2>/dev/null || echo "No README.md"
@@ -136,19 +140,19 @@ jobs:
       - name: Upload exe artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-exe
-          path: release/wangyi-mc-checkworld-tauri.exe
+          name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-exe
+          path: release/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64.exe
 
       - name: Upload msi artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-msi
-          path: release/*.msi
+          name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-msi
+          path: release/*-v${{ needs.check.outputs.version }}-x64_en-US.msi
 
       - name: Upload portable zip artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-绿色版
+          name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-绿色版
           path: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-绿色版.zip
 
   # ── 3. Release: 发布 GitHub Release ─────────────────────────
@@ -179,7 +183,7 @@ jobs:
             ## 网易MC检查世界 v${{ needs.check.outputs.version }}
             
             ### 📦 下载说明
-            - **exe**: 便携版，直接运行 `wangyi-mc-checkworld-tauri.exe` 即可
+            - **exe**: 便携版，直接运行 `wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64.exe` 即可
             - **msi**: Windows 安装程序
             - **绿色版.zip**: 便携版，解压后运行 exe
             
@@ -194,8 +198,8 @@ jobs:
             - Windows 10/11 x64 (仅支持 64 位)
             - 已安装网易我的世界电脑版
           files: |
-            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-exe/wangyi-mc-checkworld-tauri.exe
-            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-msi/*.msi
-            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-绿色版/*.zip
+            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-exe/*.exe
+            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-msi/*.msi
+            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-绿色版/*.zip
           draft: false
           prerelease: false

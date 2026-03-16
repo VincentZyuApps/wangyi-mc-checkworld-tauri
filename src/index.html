@@ -9,12 +9,16 @@
 <body>
   <div class="container">
     <header>
-      <h1>🎮 MC NetEase World Manager</h1>
+      <h1 id="app-title">🎮 MC NetEase World Manager</h1>
       <div class="header-right">
         <div class="header-info">
           <span id="worlds-path">Loading...</span>
         </div>
-        <div class="theme-switcher">
+        <div class="header-controls">
+          <select id="locale-select" class="locale-select">
+            <option value="zh-CN">中文</option>
+            <option value="en-US">English</option>
+          </select>
           <button id="theme-btn" class="btn btn-secondary btn-small" title="切换主题">
             <span id="theme-icon">🌓</span>
           </button>
@@ -83,6 +87,10 @@
     <div id="toast" class="toast hidden"></div>
   </div>
 
+  <script src="i18n.js"></script>
+  <script src="theme.js"></script>
+  <script src="data.js"></script>
+  <script src="ui.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
