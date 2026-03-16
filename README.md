@@ -85,7 +85,7 @@ git commit -m "fix: rebuild - build action --clear"
 
 ## 🖥️ 系统要求
 
-- Windows 10/11 (x64)
+- Windows 10/11 x64 (仅支持 64 位)
 - 已安装网易我的世界电脑版
 
 ## 📝 许可证

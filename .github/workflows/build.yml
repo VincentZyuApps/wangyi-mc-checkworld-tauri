@@ -85,8 +85,8 @@ jobs:
       - name: Get version
         id: version
         run: |
-          VERSION=$(grep -oP '"version":\s*"\K[^"]+' src-tauri/tauri.conf.json)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          $VERSION = (Get-Content src-tauri/tauri.conf.json | Select-String '"version"' | ForEach-Object { $_.Line -replace '.*"version":\s*"([^"]+)".*', '$1' })
+          echo "version=$VERSION" >> $env:GITHUB_OUTPUT
 
       - name: Install Tauri CLI
         run: cargo install tauri-cli --locked
@@ -182,7 +182,7 @@ jobs:
             - 🗑️ 删除存档
             
             ### 🖥️ 系统要求
-            - Windows 10/11 x64
+            - Windows 10/11 x64 (仅支持 64 位)
             - 已安装网易我的世界电脑版
           files: |
             artifacts/wangyi-mc-checkworld-v${{ steps.version.outputs.version_raw }}-exe/wangyi-mc-checkworld-tauri.exe
