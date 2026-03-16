@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "网易MC检查世界",
+  "productName": "WangyiMCCheckworld",
   "version": "0.1.0",
   "identifier": "com.vincentzyu.wangyi-mc-checkworld-tauri",
   "build": {
@@ -15,7 +15,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "网易MC检查世界",
+        "title": "WangyiMCCheckworld",
         "width": 1100,
         "height": 700,
         "minWidth": 800,
