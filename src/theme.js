@@ -1,7 +1,3 @@
-const { invoke } = window.__TAURI__.core;
-
-let allWorlds = [];
-let filteredWorlds = [];
 let currentTheme = 'system';
 
 const themeIcons = {
