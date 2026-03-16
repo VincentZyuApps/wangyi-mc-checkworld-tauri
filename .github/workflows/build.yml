@@ -92,18 +92,21 @@ jobs:
       - name: Prepare release package
         run: |
           mkdir -p release
+          mkdir -p release-portable
           
           # Copy exe
           cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release/
+          cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release-portable/
           
           # Copy MSI installer
           cp src-tauri/target/release/bundle/msi/*.msi release/
           
           # Copy README
           cp README.md release/ 2>/dev/null || echo "No README.md"
+          cp README.md release-portable/ 2>/dev/null || echo "No README.md"
           
-          # Create portable zip (绿色版)
-          cd release
+          # Create portable zip (绿色版) - only exe and README
+          cd release-portable
           7z a -tzip "../wangyi-mc-checkworld-tauri-windows-x64-绿色版.zip" *
         shell: bash
 

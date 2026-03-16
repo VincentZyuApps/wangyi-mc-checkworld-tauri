@@ -18,6 +18,20 @@
   --shadow: rgba(0, 0, 0, 0.3);
 }
 
+[data-theme="light"] {
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --accent: #e94560;
+  --accent-hover: #ff6b6b;
+  --success: #2ecc71;
+  --warning: #f39c12;
+  --border: #ddd;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: var(--bg-primary);
@@ -49,6 +63,12 @@ header h1 {
   background-clip: text;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .header-info {
   font-size: 0.85rem;
   color: var(--text-secondary);
@@ -56,6 +76,17 @@ header h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.theme-switcher {
+  display: flex;
+  align-items: center;
+}
+
+#theme-btn {
+  font-size: 1.2rem;
+  padding: 8px 12px;
+  min-width: 44px;
 }
 
 /* Toolbar */
