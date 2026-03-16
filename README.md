@@ -53,12 +53,16 @@ cargo tauri dev
 |--------|------|
 | `build action` | 触发构建并上传 Artifact |
 | `build release` | 触发构建并创建 Release |
+| `--clear` | 清除缓存，从头编译 |
 
 示例：
 ```bash
 git commit -m "feat: add new feature - build action"
 git commit -m "chore: prepare v1.0 - build release"
+git commit -m "fix: rebuild - build action --clear"
 ```
+
+👉 **详细说明请查看 [BUILD.md](.github/workflows/BUILD.md)**
 
 ## 📁 项目结构
 

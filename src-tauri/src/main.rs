@@ -219,6 +219,7 @@ fn rename_world(folder: String, new_name: String) -> Result<(), String> {
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             get_worlds_path,
             list_worlds,
