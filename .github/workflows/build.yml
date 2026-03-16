@@ -1,0 +1,127 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Trigger on commit message containing keywords
+  workflow_dispatch:
+
+jobs:
+  check-trigger:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.check.outputs.should_build }}
+      should_release: ${{ steps.check.outputs.should_release }}
+    steps:
+      - name: Check commit message for build triggers
+        id: check
+        run: |
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          echo "Commit message: $COMMIT_MSG"
+          
+          # Check for build action trigger
+          if [[ "$COMMIT_MSG" == *"build action"* ]] || [[ "$COMMIT_MSG" == *"Build Action"* ]] || [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_build=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check for release trigger
+          if [[ "$COMMIT_MSG" == *"build release"* ]] || [[ "$COMMIT_MSG" == *"Build Release"* ]]; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    needs: check-trigger
+    if: needs.check-trigger.outputs.should_build == 'true' || needs.check-trigger.outputs.should_release == 'true'
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-action@stable
+        with:
+          toolchain: stable
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli
+
+      - name: Build Tauri App
+        run: cargo tauri build
+        working-directory: .
+
+      - name: Prepare release package
+        run: |
+          mkdir -p release
+          cp src-tauri/target/release/mc-netease-world-manager.exe release/
+          cp README.md release/ 2>/dev/null || echo "No README.md"
+          
+          # Create portable zip
+          cd release
+          7z a -tzip "../mc-netease-world-manager-windows-x64.zip" *
+        shell: bash
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mc-netease-world-manager-windows-x64
+          path: mc-netease-world-manager-windows-x64.zip
+
+  release:
+    needs: [check-trigger, build]
+    if: needs.check-trigger.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mc-netease-world-manager-windows-x64
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(date +'%Y.%m.%d-%H%M')
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: Release ${{ steps.version.outputs.version }}
+          body: |
+            ## MC NetEase World Manager
+            
+            ### 📦 下载说明
+            下载 `mc-netease-world-manager-windows-x64.zip` 并解压即可使用。
+            
+            ### ✨ 功能
+            - 📂 列出所有网易 MC 存档
+            - 🔍 搜索和排序
+            - 💾 备份存档为 ZIP
+            - ✏️ 重命名存档
+            - 🗑️ 删除存档
+            
+            ### 🖥️ 系统要求
+            - Windows 10/11 x64
+            - 已安装网易我的世界电脑版
+          files: |
+            mc-netease-world-manager-windows-x64.zip
+          draft: false
+          prerelease: false
