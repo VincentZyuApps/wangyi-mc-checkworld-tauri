@@ -122,10 +122,9 @@ jobs:
           cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release/wangyi-mc-checkworld-v${VERSION}-windows-x64.exe
           cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release-portable/wangyi-mc-checkworld-v${VERSION}-windows-x64.exe
           
-          # Copy MSI and rename with version
+          # Copy MSI and rename to unified format
           for msi in src-tauri/target/release/bundle/msi/*.msi; do
-            base=$(basename "$msi" .msi)
-            newname="${base}-v${VERSION}-x64_en-US.msi"
+            newname="wangyi-mc-checkworld-v${VERSION}-windows-x64.msi"
             cp "$msi" release/"$newname"
           done
           
@@ -147,7 +146,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-msi
-          path: release/*-v${{ needs.check.outputs.version }}-x64_en-US.msi
+          path: release/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64.msi
 
       - name: Upload portable zip artifact
         uses: actions/upload-artifact@v4
@@ -199,7 +198,7 @@ jobs:
             - 已安装网易我的世界电脑版
           files: |
             artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-exe/*.exe
-            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-msi/*.msi
+            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-msi/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64.msi
             artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-绿色版/*.zip
           draft: false
           prerelease: false
