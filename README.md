@@ -1,6 +1,9 @@
+![wangyi-mc-checkworld-tauri](https://socialify.git.ci/VincentZyu233/wangyi-mc-checkworld-tauri/image?custom_language=Rust&description=1&font=Source+Code+Pro&forks=1&issues=1&language=1&logo=https%3A%2F%2Ficon.icepanel.io%2FTechnology%2Fsvg%2FTauri.svg&name=1&owner=1&pulls=1&stargazers=1&theme=Auto)
+
 # MC NetEase World Manager
 
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/VincentZyu233/mc-netease-world-manager)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/VincentZyu233/wangyi-mc-checkworld-tauri)
+[![Gitee](https://img.shields.io/badge/Gitee-Repository-c41e3a?logo=gitee&logoColor=white)](https://gitee.com/vincent-zyu/wangyi-mc-checkworld-tauri)
 
 一个用 Rust + Tauri 构建的网易我的世界电脑版存档管理工具。
 
@@ -18,16 +21,22 @@
 
 ### 方式 1：下载预编译版本
 
-前往 [Releases](https://github.com/VincentZyu233/mc-netease-world-manager/releases) 页面下载最新版本的 ZIP 包，解压后直接运行 `mc-netease-world-manager.exe`。
+[![Windows x64](https://img.shields.io/badge/Download-Windows_x64-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/VincentZyu233/wangyi-mc-checkworld-tauri/releases)
+
+前往 [Releases](https://github.com/VincentZyu233/wangyi-mc-checkworld-tauri/releases) 页面下载最新版本的 ZIP 包，解压后直接运行 `wangyi-mc-checkworld-tauri.exe`。
 
 ### 方式 2：从源码构建
 
 需要安装 [Rust](https://rustup.rs/) 和 [Tauri CLI](https://tauri.app/)：
 
 ```bash
-# 克隆仓库
-git clone https://github.com/VincentZyu233/mc-netease-world-manager.git
-cd mc-netease-world-manager
+# 克隆仓库 (GitHub)
+git clone https://github.com/VincentZyu233/wangyi-mc-checkworld-tauri.git
+cd wangyi-mc-checkworld-tauri
+
+# 或克隆仓库 (Gitee)
+git clone https://gitee.com/vincent-zyu/wangyi-mc-checkworld-tauri.git
+cd wangyi-mc-checkworld-tauri
 
 # 安装 Tauri CLI
 cargo install tauri-cli
@@ -67,7 +76,7 @@ git commit -m "fix: rebuild - build action --clear"
 ## 📁 项目结构
 
 ```
-+++_tauri_manage_+++/
+wangyi-mc-checkworld-tauri/
 ├── src/                    # 前端文件
 │   ├── index.html
 │   ├── main.js
@@ -87,7 +96,3 @@ git commit -m "fix: rebuild - build action --clear"
 
 - Windows 10/11 x64 (仅支持 64 位)
 - 已安装网易我的世界电脑版
-
-## 📝 许可证
-
-MIT License

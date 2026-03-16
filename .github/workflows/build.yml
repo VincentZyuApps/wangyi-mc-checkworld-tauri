@@ -82,7 +82,7 @@ jobs:
         if: needs.check-trigger.outputs.clear_cache == 'true'
         run: echo "🧹 Building without cache (--clear flag detected)"
 
-      - name: Get version
+      - name: Get version from tauri.conf.json
         id: version
         run: |
           $VERSION = (Get-Content src-tauri/tauri.conf.json | Select-String '"version"' | ForEach-Object { $_.Line -replace '.*"version":\s*"([^"]+)".*', '$1' })
