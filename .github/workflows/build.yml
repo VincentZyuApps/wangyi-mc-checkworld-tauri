@@ -92,19 +92,19 @@ jobs:
       - name: Prepare release package
         run: |
           mkdir -p release
-          cp src-tauri/target/release/mc-netease-world-manager.exe release/
+          cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release/
           cp README.md release/ 2>/dev/null || echo "No README.md"
           
           # Create portable zip
           cd release
-          7z a -tzip "../mc-netease-world-manager-windows-x64.zip" *
+          7z a -tzip "../wangyi-mc-checkworld-tauri-windows-x64.zip" *
         shell: bash
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mc-netease-world-manager-windows-x64
-          path: mc-netease-world-manager-windows-x64.zip
+          name: wangyi-mc-checkworld-tauri-windows-x64
+          path: wangyi-mc-checkworld-tauri-windows-x64.zip
 
   release:
     needs: [check-trigger, build]
@@ -120,7 +120,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: mc-netease-world-manager-windows-x64
+          name: wangyi-mc-checkworld-tauri-windows-x64
 
       - name: Get version
         id: version
@@ -137,7 +137,7 @@ jobs:
             ## MC NetEase World Manager
             
             ### 📦 下载说明
-            下载 `mc-netease-world-manager-windows-x64.zip` 并解压即可使用。
+            下载 `wangyi-mc-checkworld-tauri-windows-x64.zip` 并解压即可使用。
             
             ### ✨ 功能
             - 📂 列出所有网易 MC 存档
@@ -150,6 +150,6 @@ jobs:
             - Windows 10/11 x64
             - 已安装网易我的世界电脑版
           files: |
-            mc-netease-world-manager-windows-x64.zip
+            wangyi-mc-checkworld-tauri-windows-x64.zip
           draft: false
           prerelease: false

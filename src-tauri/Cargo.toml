@@ -1,5 +1,5 @@
 [package]
-name = "mc-netease-world-manager"
+name = "wangyi-mc-checkworld-tauri"
 version = "0.1.0"
 description = "Minecraft Bedrock (NetEase) World Save Manager"
 authors = ["VincentZyu"]
