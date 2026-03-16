@@ -92,19 +92,38 @@ jobs:
       - name: Prepare release package
         run: |
           mkdir -p release
+          
+          # Copy exe
           cp src-tauri/target/release/wangyi-mc-checkworld-tauri.exe release/
+          
+          # Copy MSI installer
+          cp src-tauri/target/release/bundle/msi/*.msi release/
+          
+          # Copy README
           cp README.md release/ 2>/dev/null || echo "No README.md"
           
-          # Create portable zip
+          # Create portable zip (绿色版)
           cd release
-          7z a -tzip "../wangyi-mc-checkworld-tauri-windows-x64.zip" *
+          7z a -tzip "../wangyi-mc-checkworld-tauri-windows-x64-绿色版.zip" *
         shell: bash
 
-      - name: Upload build artifact
+      - name: Upload exe artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wangyi-mc-checkworld-tauri-windows-x64
-          path: wangyi-mc-checkworld-tauri-windows-x64.zip
+          name: wangyi-mc-checkworld-tauri-exe
+          path: release/wangyi-mc-checkworld-tauri.exe
+
+      - name: Upload msi artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wangyi-mc-checkworld-tauri-msi
+          path: release/*.msi
+
+      - name: Upload portable zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wangyi-mc-checkworld-tauri-windows-x64-绿色版
+          path: wangyi-mc-checkworld-tauri-windows-x64-绿色版.zip
 
   release:
     needs: [check-trigger, build]
@@ -117,10 +136,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download artifact
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: wangyi-mc-checkworld-tauri-windows-x64
+          path: artifacts
+
+      - name: List downloaded files
+        run: find artifacts -type f
 
       - name: Get version
         id: version
@@ -134,10 +156,12 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           name: Release ${{ steps.version.outputs.version }}
           body: |
-            ## MC NetEase World Manager
+            ## 网易MC检查世界
             
             ### 📦 下载说明
-            下载 `wangyi-mc-checkworld-tauri-windows-x64.zip` 并解压即可使用。
+            - **exe**: 便携版，直接运行 `wangyi-mc-checkworld-tauri.exe` 即可
+            - **msi**: Windows 安装程序
+            - **绿色版.zip**: 便携版，解压后运行 exe
             
             ### ✨ 功能
             - 📂 列出所有网易 MC 存档
@@ -150,6 +174,8 @@ jobs:
             - Windows 10/11 x64
             - 已安装网易我的世界电脑版
           files: |
-            wangyi-mc-checkworld-tauri-windows-x64.zip
+            artifacts/wangyi-mc-checkworld-tauri-exe/wangyi-mc-checkworld-tauri.exe
+            artifacts/wangyi-mc-checkworld-tauri-msi/*.msi
+            artifacts/wangyi-mc-checkworld-tauri-windows-x64-绿色版/*.zip
           draft: false
           prerelease: false
