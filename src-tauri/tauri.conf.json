@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "MC NetEase World Manager",
+  "productName": "网易MC检查世界",
   "version": "0.1.0",
-  "identifier": "com.vincentzyu.mc-netease-world-manager",
+  "identifier": "com.vincentzyu.wangyi-mc-checkworld-tauri",
   "build": {
     "beforeDevCommand": "",
     "beforeBuildCommand": "",
@@ -15,7 +15,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "MC NetEase World Manager",
+        "title": "网易MC检查世界",
         "width": 1100,
         "height": 700,
         "minWidth": 800,
@@ -29,6 +29,8 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": []
+    "icon": [
+      "icons/icon.ico"
+    ]
   }
 }
