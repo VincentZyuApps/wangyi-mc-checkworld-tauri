@@ -82,6 +82,12 @@ jobs:
         if: needs.check-trigger.outputs.clear_cache == 'true'
         run: echo "🧹 Building without cache (--clear flag detected)"
 
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep -oP '"version":\s*"\K[^"]+' src-tauri/tauri.conf.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Install Tauri CLI
         run: cargo install tauri-cli --locked
 
@@ -91,6 +97,7 @@ jobs:
 
       - name: Prepare release package
         run: |
+          VERSION=${{ steps.version.outputs.version }}
           mkdir -p release
           mkdir -p release-portable
           
@@ -105,28 +112,28 @@ jobs:
           cp README.md release/ 2>/dev/null || echo "No README.md"
           cp README.md release-portable/ 2>/dev/null || echo "No README.md"
           
-          # Create portable zip (绿色版) - only exe and README
+          # Create portable zip (绿色版) with version
           cd release-portable
-          7z a -tzip "../wangyi-mc-checkworld-tauri-windows-x64-绿色版.zip" *
+          7z a -tzip "../wangyi-mc-checkworld-v${VERSION}-windows-x64-绿色版.zip" *
         shell: bash
 
       - name: Upload exe artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wangyi-mc-checkworld-tauri-exe
+          name: wangyi-mc-checkworld-v${{ steps.version.outputs.version }}-exe
           path: release/wangyi-mc-checkworld-tauri.exe
 
       - name: Upload msi artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wangyi-mc-checkworld-tauri-msi
+          name: wangyi-mc-checkworld-v${{ steps.version.outputs.version }}-msi
           path: release/*.msi
 
       - name: Upload portable zip artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wangyi-mc-checkworld-tauri-windows-x64-绿色版
-          path: wangyi-mc-checkworld-tauri-windows-x64-绿色版.zip
+          name: wangyi-mc-checkworld-v${{ steps.version.outputs.version }}-绿色版
+          path: wangyi-mc-checkworld-v${{ steps.version.outputs.version }}-windows-x64-绿色版.zip
 
   release:
     needs: [check-trigger, build]
@@ -150,8 +157,9 @@ jobs:
       - name: Get version
         id: version
         run: |
-          VERSION=$(date +'%Y.%m.%d-%H%M')
+          VERSION=$(grep -oP '"version":\s*"\K[^"]+' src-tauri/tauri.conf.json)
           echo "version=v$VERSION" >> $GITHUB_OUTPUT
+          echo "version_raw=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -159,7 +167,7 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           name: Release ${{ steps.version.outputs.version }}
           body: |
-            ## 网易MC检查世界
+            ## 网易MC检查世界 v${{ steps.version.outputs.version_raw }}
             
             ### 📦 下载说明
             - **exe**: 便携版，直接运行 `wangyi-mc-checkworld-tauri.exe` 即可
@@ -177,8 +185,8 @@ jobs:
             - Windows 10/11 x64
             - 已安装网易我的世界电脑版
           files: |
-            artifacts/wangyi-mc-checkworld-tauri-exe/wangyi-mc-checkworld-tauri.exe
-            artifacts/wangyi-mc-checkworld-tauri-msi/*.msi
-            artifacts/wangyi-mc-checkworld-tauri-windows-x64-绿色版/*.zip
+            artifacts/wangyi-mc-checkworld-v${{ steps.version.outputs.version_raw }}-exe/wangyi-mc-checkworld-tauri.exe
+            artifacts/wangyi-mc-checkworld-v${{ steps.version.outputs.version_raw }}-msi/*.msi
+            artifacts/wangyi-mc-checkworld-v${{ steps.version.outputs.version_raw }}-绿色版/*.zip
           draft: false
           prerelease: false
