@@ -44,6 +44,7 @@ const translations = {
     toastOpenFailed: '打开文件夹失败: {error}',
     toastLoadFailed: '加载存档失败',
     nameEmptyError: '名称不能为空',
+    logWindowTitle: '📋 日志',
   },
   'en-US': {
     appTitle: '🎮 MC NetEase World Manager',
@@ -90,6 +91,7 @@ const translations = {
     toastOpenFailed: 'Failed to open folder: {error}',
     toastLoadFailed: 'Failed to load worlds',
     nameEmptyError: 'Name cannot be empty',
+    logWindowTitle: '📋 Log',
   }
 };
 

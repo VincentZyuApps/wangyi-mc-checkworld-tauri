@@ -408,3 +408,52 @@ select:focus {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
+
+/* Log window */
+.log-window {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 500px;
+  height: 300px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.log-window.hidden {
+  display: none;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  border-radius: 8px 8px 0 0;
+}
+
+.log-header h3 {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.log-content {
+  flex: 1;
+  padding: 10px;
+  margin: 0;
+  overflow: auto;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border-radius: 0 0 8px 8px;
+}

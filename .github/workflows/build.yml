@@ -151,7 +151,7 @@ jobs:
       - name: Upload portable zip artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-绿色版
+          name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-green
           path: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-绿色版.zip
 
   # ── 3. Release: 发布 GitHub Release ─────────────────────────
@@ -199,6 +199,6 @@ jobs:
           files: |
             artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-exe/*.exe
             artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-msi/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64.msi
-            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-绿色版/*.zip
+            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-green/*.zip
           draft: false
           prerelease: false

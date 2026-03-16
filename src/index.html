@@ -22,6 +22,9 @@
           <button id="theme-btn" class="btn btn-secondary btn-small" title="切换主题">
             <span id="theme-icon">🌓</span>
           </button>
+          <button id="log-btn" class="btn btn-secondary btn-small" title="日志">
+            📋
+          </button>
         </div>
       </div>
     </header>
@@ -85,6 +88,15 @@
 
     <!-- Toast notifications -->
     <div id="toast" class="toast hidden"></div>
+
+    <!-- Log window -->
+    <div id="log-window" class="log-window hidden">
+      <div class="log-header">
+        <h3 id="log-title">📋 日志</h3>
+        <button id="log-close" class="btn btn-secondary btn-small">✕</button>
+      </div>
+      <pre id="log-content" class="log-content"></pre>
+    </div>
   </div>
 
   <script src="i18n.js"></script>

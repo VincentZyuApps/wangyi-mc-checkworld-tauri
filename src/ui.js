@@ -41,6 +41,8 @@ function updateUITexts() {
   document.getElementById('total-count').textContent = t('totalCount', { count: filteredWorlds.length });
   document.getElementById('total-size').textContent = t('totalSize', { size: formatSize(filteredWorlds.reduce((sum, w) => sum + w.size, 0)) });
   
+  document.getElementById('log-title').textContent = t('logWindowTitle');
+  
   renderWorlds();
 }
 
@@ -59,6 +61,29 @@ function setupEventListeners() {
   document.getElementById('modal-cancel').addEventListener('click', hideModal);
   document.getElementById('modal').addEventListener('click', (e) => {
     if (e.target.id === 'modal') hideModal();
+  });
+
+  // Log window
+  document.getElementById('log-btn').addEventListener('click', async () => {
+    const logWindow = document.getElementById('log-window');
+    const logContent = document.getElementById('log-content');
+    
+    if (logWindow.classList.contains('hidden')) {
+      try {
+        const log = await invoke('get_log');
+        logContent.textContent = log || 'No log content';
+        logContent.scrollTop = logContent.scrollHeight;
+      } catch (e) {
+        logContent.textContent = `Failed to load log: ${e}`;
+      }
+      logWindow.classList.remove('hidden');
+    } else {
+      logWindow.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('log-close').addEventListener('click', () => {
+    document.getElementById('log-window').classList.add('hidden');
   });
 }
 

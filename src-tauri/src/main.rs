@@ -7,7 +7,42 @@ use std::env;
 use std::fs;
 use std::io::{Read, Write};
 use std::path::PathBuf;
+use std::sync::Mutex;
+use tracing::{error, info, warn};
+use tracing_appender::rolling::{RollingFileAppender, Rotation};
+use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 use walkdir::WalkDir;
+
+static LOG_CONTENT: Mutex<String> = Mutex::new(String::new());
+
+fn init_logging() {
+    let appdata = env::var("APPDATA").unwrap_or_else(|_| String::from("."));
+    let log_dir = PathBuf::from(&appdata)
+        .join("WangyiMCCheckworld")
+        .join("logs");
+    
+    std::fs::create_dir_all(&log_dir).ok();
+    
+    let file_appender = RollingFileAppender::new(
+        Rotation::NEVER,
+        &log_dir,
+        "latest.log",
+    );
+    
+    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+    
+    let env_filter = EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| EnvFilter::new("info"));
+    
+    tracing_subscriber::registry()
+        .with(env_filter)
+        .with(fmt::layer().with_writer(non_blocking).with_ansi(false))
+        .with(fmt::layer().with_writer(std::io::stderr))
+        .init();
+    
+    info!("Application starting...");
+    info!("Log directory: {}", log_dir.display());
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct WorldInfo {
@@ -21,7 +56,11 @@ struct WorldInfo {
 }
 
 fn get_worlds_dir() -> PathBuf {
-    let appdata = env::var("APPDATA").unwrap_or_else(|_| String::from("."));
+    let appdata = env::var("APPDATA").unwrap_or_else(|_| {
+        warn!("APPDATA not found, using fallback");
+        String::from("C:\\Users\\VincentZyu\\AppData\\Roaming")
+    });
+    info!("APPDATA: {}", appdata);
     PathBuf::from(appdata)
         .join("MinecraftPC_Netease_PB")
         .join("minecraftWorlds")
@@ -55,14 +94,19 @@ fn get_folder_size(path: &PathBuf) -> u64 {
 
 #[tauri::command]
 fn get_worlds_path() -> String {
-    get_worlds_dir().to_string_lossy().to_string()
+    let path = get_worlds_dir().to_string_lossy().to_string();
+    info!("get_worlds_path: {}", path);
+    path
 }
 
 #[tauri::command]
 fn list_worlds() -> Result<Vec<WorldInfo>, String> {
+    info!("list_worlds called");
     let worlds_dir = get_worlds_dir();
+    info!("Worlds directory: {}", worlds_dir.display());
 
     if !worlds_dir.exists() {
+        error!("Worlds directory not found: {}", worlds_dir.display());
         return Err(format!(
             "Worlds directory not found: {}",
             worlds_dir.display()
@@ -137,6 +181,7 @@ fn list_worlds() -> Result<Vec<WorldInfo>, String> {
             .cmp(&a.last_saved_timestamp.unwrap_or(0))
     });
 
+    info!("Found {} worlds", worlds.len());
     Ok(worlds)
 }
 
@@ -214,10 +259,34 @@ fn rename_world(folder: String, new_name: String) -> Result<(), String> {
     }
 
     fs::write(&levelname_path, new_name).map_err(|e| e.to_string())?;
+    info!("Renamed world folder: {} to {}", folder, new_name);
     Ok(())
 }
 
+#[tauri::command]
+fn get_log() -> Result<String, String> {
+    let appdata = env::var("APPDATA").unwrap_or_else(|_| String::from("C:\\Users\\VincentZyu\\AppData\\Roaming"));
+    let log_path = PathBuf::from(&appdata)
+        .join("WangyiMCCheckworld")
+        .join("logs")
+        .join("latest.log");
+    
+    if log_path.exists() {
+        fs::read_to_string(&log_path).map_err(|e| e.to_string())
+    } else {
+        Ok("Log file not found".to_string())
+    }
+}
+
 fn main() {
+    init_logging();
+    
+    std::panic::set_hook(Box::new(|panic_info| {
+        error!("Application panic: {}", panic_info);
+    }));
+    
+    info!("Building Tauri application...");
+    
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
@@ -227,6 +296,7 @@ fn main() {
             backup_world,
             delete_world,
             rename_world,
+            get_log,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
