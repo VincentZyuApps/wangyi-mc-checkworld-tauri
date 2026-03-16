@@ -258,8 +258,9 @@ fn rename_world(folder: String, new_name: String) -> Result<(), String> {
         return Err("levelname.txt not found".to_string());
     }
 
+    let new_name_cloned = new_name.clone();
     fs::write(&levelname_path, new_name).map_err(|e| e.to_string())?;
-    info!("Renamed world folder: {} to {}", folder, new_name);
+    info!("Renamed world folder: {} to {}", folder, new_name_cloned);
     Ok(())
 }
 

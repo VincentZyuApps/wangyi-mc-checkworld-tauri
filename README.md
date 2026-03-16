@@ -1,4 +1,4 @@
-![wangyi-mc-checkworld-tauri](https://socialify.git.ci/VincentZyu233/wangyi-mc-checkworld-tauri/image?custom_language=Rust&description=1&font=Source+Code+Pro&forks=1&issues=1&language=1&logo=https%3A%2F%2Ficon.icepanel.io%2FTechnology%2Fsvg%2FTauri.svg&name=1&owner=1&pulls=1&stargazers=1&theme=Auto)
+![wangyi-mc-checkworld-tauri](https://socialify.git.ci/VincentZyu233/wangyi-mc-checkworld-tauri/image?custom_language=Rust&description=1&font=Source+Code+Pro&forks=1&issues=1&language=1&logo=https%3A%2F%2Ficon.icepanel.io%2FTechnology%2Fsvg%2FTauri.svg&name=1&owner=1&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
 
 # MC NetEase World Manager
 
