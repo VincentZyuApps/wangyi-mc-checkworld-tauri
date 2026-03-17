@@ -1,3 +1,5 @@
+const { invoke } = window.__TAURI__.core;
+
 function renderWorlds() {
   const tbody = document.getElementById('worlds-tbody');
 

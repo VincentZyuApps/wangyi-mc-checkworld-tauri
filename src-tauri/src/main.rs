@@ -14,6 +14,7 @@ use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, Env
 use walkdir::WalkDir;
 
 static LOG_CONTENT: Mutex<String> = Mutex::new(String::new());
+static GUARD: Mutex<Option<tracing_appender::non_blocking::WorkerGuard>> = Mutex::new(None);
 
 fn init_logging() {
     let appdata = env::var("APPDATA").unwrap_or_else(|_| String::from("."));
@@ -29,7 +30,7 @@ fn init_logging() {
         "latest.log",
     );
     
-    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+    let (non_blocking, guard) = tracing_appender::non_blocking(file_appender);
     
     let env_filter = EnvFilter::try_from_default_env()
         .unwrap_or_else(|_| EnvFilter::new("info"));
@@ -39,6 +40,9 @@ fn init_logging() {
         .with(fmt::layer().with_writer(non_blocking).with_ansi(false))
         .with(fmt::layer().with_writer(std::io::stderr))
         .init();
+    
+    // Keep guard alive
+    *GUARD.lock().unwrap() = Some(guard);
     
     info!("Application starting...");
     info!("Log directory: {}", log_dir.display());
