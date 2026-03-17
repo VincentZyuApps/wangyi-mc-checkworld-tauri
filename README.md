@@ -17,7 +17,13 @@
 - 🗑️ **删除存档** - 安全删除不需要的存档
 - 🎨 **深色主题** - 现代化暗色 UI 界面
 
-## 📸 预览
+## 🔧 核心原理
+
+应用通过环境变量 `%APPDATA%` 自动定位存档目录：`%APPDATA%\MinecraftPC_Netease_PB\minecraftWorlds`，无需手动配置。
+
+利用 Windows 环境变量动态获取用户应用数据目录，确保跨用户兼容性和自动化部署。
+
+## 📸预览
 
 ![应用预览](doc/preview.png)
 
