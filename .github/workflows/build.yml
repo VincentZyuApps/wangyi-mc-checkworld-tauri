@@ -132,9 +132,9 @@ jobs:
           cp README.md release/ 2>/dev/null || echo "No README.md"
           cp README.md release-portable/ 2>/dev/null || echo "No README.md"
           
-          # Create portable zip (绿色版) with version
+          # Create portable zip (green) with version
           cd release-portable
-          7z a -tzip "../wangyi-mc-checkworld-v${VERSION}-windows-x64-绿色版.zip" *
+          7z a -tzip "../wangyi-mc-checkworld-v${VERSION}-windows-x64-green.zip" *
 
       - name: Upload exe artifact
         uses: actions/upload-artifact@v4
@@ -152,7 +152,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-green
-          path: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-绿色版.zip
+          path: wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-green.zip
 
   # ── 3. Release: 发布 GitHub Release ─────────────────────────
   release:
@@ -199,6 +199,6 @@ jobs:
           files: |
             artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-exe/*.exe
             artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-msi/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64.msi
-            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-green/*.zip
+            artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-green/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-green.zip
           draft: false
           prerelease: false
