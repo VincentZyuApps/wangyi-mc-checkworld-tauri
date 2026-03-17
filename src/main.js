@@ -305,6 +305,13 @@ function updateUITexts() {
   document.getElementById('total-count').textContent = t('totalCount', { count: filteredWorlds.length });
   document.getElementById('total-size').textContent = t('totalSize', { size: formatSize(filteredWorlds.reduce((sum, w) => sum + w.size, 0)) });
   
+  document.getElementById('th-index').textContent = t('colIndex');
+  document.getElementById('th-name').textContent = t('colName');
+  document.getElementById('th-folder').textContent = t('colFolder');
+  document.getElementById('th-time').textContent = t('colTime');
+  document.getElementById('th-size').textContent = t('colSize');
+  document.getElementById('th-actions').textContent = t('colActions');
+  
   renderWorlds();
 }
 
