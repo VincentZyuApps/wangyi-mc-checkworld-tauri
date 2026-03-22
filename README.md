@@ -7,6 +7,21 @@
 
 一个用 Rust + Tauri 构建的网易我的世界电脑版存档管理工具。
 
+## 🛠️ 技术栈
+
+| 名称 | 版本 | 作用 |
+|------|------|------|
+| ![Rust](https://img.shields.io/badge/Rust-stable-orange?logo=rust&logoColor=white) | stable | 系统级编程语言，安全、高性能 |
+| ![Tauri](https://img.shields.io/badge/Tauri-0.2.7-FFC131?logo=tauri&logoColor=black) | 0.2.7 | 轻量级跨平台桌面应用框架（Webview + Rust 后端） |
+| ![tauri-build](https://img.shields.io/badge/tauri--build-0.2.7-FFC131?logo=tauri&logoColor=black) | 0.2.7 | Tauri 构建时工具，编译时生成上下文和嵌入资源 |
+| ![tauri-plugin-shell](https://img.shields.io/badge/tauri--plugin--shell-2-FFC131?logo=tauri&logoColor=black) | 2 | 允许前端调用系统 shell（打开文件夹、文件、网址等） |
+| ![serde](https://img.shields.io/badge/serde-0.2.7-E34F4F?logo=serde&logoColor=white) | 0.2.7 | Rust 序列化/反序列化库，处理配置和数据交换 |
+| ![serde_json](https://img.shields.io/badge/serde__json-1.0-E34F4F?logo=json&logoColor=white) | 1.0 | JSON 支持，配合 serde 处理前后端数据 |
+| ![chrono](https://img.shields.io/badge/chrono-0.2.7-7B2D8B?logo=rust&logoColor=white) | 0.2.7 | 日期时间处理，带 serde 支持，记录存档时间戳 |
+| ![walkdir](https://img.shields.io/badge/walkdir-2.4-orange?logo=rust&logoColor=white) | 2.4 | 高效遍历目录树，扫描存档文件夹 |
+| ![fs_extra](https://img.shields.io/badge/fs__extra-1.3-orange?logo=rust&logoColor=white) | 1.3 | 增强版文件操作，复制/移动/重命名文件夹 |
+| ![zip](https://img.shields.io/badge/zip-0.6-orange?logo=rust&logoColor=white) | 0.6 | ZIP 压缩/解压，打包存档为 .zip 备份 |
+
 ## ✨ 功能
 
 - 📂 **列出存档** - 显示所有存档的名称、文件夹、保存时间和大小
