@@ -7,7 +7,7 @@ let currentLocale = 'zh-CN';
 
 const translations = {
   'zh-CN': {
-    appTitle: '🎮 MC NetEase World Manager',
+    appTitle: '🎮 MC 网易世界管理器',
     loading: 'Loading...',
     searchPlaceholder: '🔍 搜索存档...',
     refreshBtn: '🔄 刷新',

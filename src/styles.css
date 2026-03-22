@@ -66,16 +66,30 @@ header h1 {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
+  flex-shrink: 0;
 }
 
 .header-info {
   font-size: 0.85rem;
   color: var(--text-secondary);
-  max-width: 500px;
+  max-width: 400px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex-shrink: 1;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.locale-select {
+  padding: 8px 12px;
+  font-size: 0.85rem;
 }
 
 .theme-switcher {
