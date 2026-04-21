@@ -15,7 +15,7 @@
 | ![Tauri](https://img.shields.io/badge/Tauri-0.2.7-FFC131?logo=tauri&logoColor=black) | 0.2.7 | 轻量级跨平台桌面应用框架（Webview + Rust 后端） |
 | ![tauri-build](https://img.shields.io/badge/tauri--build-0.2.7-FFC131?logo=tauri&logoColor=black) | 0.2.7 | Tauri 构建时工具，编译时生成上下文和嵌入资源 |
 | ![tauri-plugin-shell](https://img.shields.io/badge/tauri--plugin--shell-2-FFC131?logo=tauri&logoColor=black) | 2 | 允许前端调用系统 shell（打开文件夹、文件、网址等） |
-| ![serde](https://img.shields.io/badge/serde-0.2.7-E34F4F?logo=serde&logoColor=white) | 0.2.7 | Rust 序列化/反序列化库，处理配置和数据交换 |
+| ![serde](https://img.shields.io/badge/serde-0.2.7-E34F4F?logo=json&logoColor=white) | 0.2.7 | Rust 序列化/反序列化库，处理配置和数据交换 |
 | ![serde_json](https://img.shields.io/badge/serde__json-1.0-E34F4F?logo=json&logoColor=white) | 1.0 | JSON 支持，配合 serde 处理前后端数据 |
 | ![chrono](https://img.shields.io/badge/chrono-0.2.7-7B2D8B?logo=rust&logoColor=white) | 0.2.7 | 日期时间处理，带 serde 支持，记录存档时间戳 |
 | ![walkdir](https://img.shields.io/badge/walkdir-2.4-orange?logo=rust&logoColor=white) | 2.4 | 高效遍历目录树，扫描存档文件夹 |
@@ -126,4 +126,6 @@ wangyi-mc-checkworld-tauri/
 ## 🖥️ 系统要求
 
 - Windows 10/11 x64 (仅支持 64 位)
-- 已安装网易我的世界电脑版(基岩互通版) ![基岩互通版示意](doc/基岩互通版.png)
+- 已安装网易我的世界电脑版(基岩互通版) 
+> here ↓
+> ![基岩互通版示意](doc/基岩互通版.png)
