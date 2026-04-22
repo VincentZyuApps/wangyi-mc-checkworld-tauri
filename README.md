@@ -5,7 +5,8 @@
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/VincentZyuApps/wangyi-mc-checkworld-tauri)
 [![Gitee](https://img.shields.io/badge/Gitee-Repository-c41e3a?logo=gitee&logoColor=white)](https://gitee.com/vincent-zyu/wangyi-mc-checkworld-tauri)
 
-一个用 Rust + Tauri 构建的网易我的世界电脑版存档管理工具。
+一个用 Rust + Tauri 构建的网易我的世界电脑版存档查看的 gui工具 的仓库。
+> 如果你更喜欢CLI(命令行)，可以去这里：`https://github.com/VincentZyuApps/wangyi-mc-bedrock-check-world`
 
 ## 🛠️ 技术栈
 
@@ -134,4 +135,4 @@ wangyi-mc-checkworld-tauri/
 - Windows 10/11 x64 (仅支持 64 位)
 - 已安装网易我的世界电脑版(基岩互通版)  ↓
 
-![doc/基岩互通版.png](doc/基岩互通版.png)indows 10/11 x64 (仅支持 64 位)
+![doc/基岩互通版.png](doc/基岩互通版.png)
