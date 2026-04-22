@@ -271,6 +271,16 @@ select:focus {
   text-align: left;
 }
 
+.worlds-table th.col-size,
+.worlds-table td.col-size {
+  text-align: right;
+}
+
+.worlds-table th.col-actions,
+.worlds-table td.col-actions {
+  text-align: center;
+}
+
 .worlds-table th {
   background: var(--bg-tertiary);
   font-weight: 600;

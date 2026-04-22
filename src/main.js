@@ -9,7 +9,7 @@ let lastLogLen = 0;
 
 const translations = {
   'zh-CN': {
-    appTitle: '🎮 MC 网易世界管理器',
+    appTitle: '🎮 MC网易基岩世界存档查看',
     loading: 'Loading...',
     searchPlaceholder: '🔍 搜索存档...',
     refreshBtn: '🔄 刷新',
@@ -33,12 +33,12 @@ const translations = {
     btnOpen: '📁 打开',
     toastPathCopied: '路径已复制',
     modalCancel: '取消',
-    logWindowTitle: '📋 日志',
+    logWindowTitle: '� 日志',
     logPollingStarted: '开始实时日志轮询',
     logPollingStopped: '日志窗口已关闭',
   },
   'en-US': {
-    appTitle: '🎮 MC NetEase World Manager',
+    appTitle: '🎮 MC NetEase World Checker',
     loading: 'Loading...',
     searchPlaceholder: '🔍 Search worlds...',
     refreshBtn: '🔄 Refresh',
@@ -62,7 +62,7 @@ const translations = {
     btnOpen: '📁 Open',
     toastPathCopied: 'Path copied',
     modalCancel: 'Cancel',
-    logWindowTitle: '📋 Log',
+    logWindowTitle: '� Log',
   }
 };
 
@@ -310,7 +310,6 @@ function setupEventListeners() {
     if (path && path !== '—') openFolder(path);
   });
 
-  document.getElementById('copy-path-btn').addEventListener('click', copyPath);
   document.getElementById('copy-path-btn2').addEventListener('click', copyPath);
 }
 

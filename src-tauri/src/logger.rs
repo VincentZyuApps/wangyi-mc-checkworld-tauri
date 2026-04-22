@@ -9,17 +9,17 @@ use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, Env
 
 static _LOG_GUARD: Mutex<Option<WorkerGuard>> = Mutex::new(None);
 
-/// 获取日志文件路径（exe 同级目录/latest.log）
+/// 获取日志文件路径（exe 同级目录/wangyi-mc-checkworld-tauri.latest.log）
 fn get_log_path() -> PathBuf {
     if let Ok(exe) = std::env::current_exe() {
         if let Some(exe_dir) = exe.parent() {
-            return exe_dir.join("latest.log");
+            return exe_dir.join("wangyi-mc-checkworld-tauri.latest.log");
         }
     }
-    PathBuf::from("latest.log")
+    PathBuf::from("wangyi-mc-checkworld-tauri.latest.log")
 }
 
-/// 初始化日志系统，仅写入 latest.log（每次启动覆盖）
+/// 初始化日志系统，仅写入 wangyi-mc-checkworld-tauri.latest.log（每次启动覆盖）
 pub fn init() {
     let log_path = get_log_path();
 
@@ -60,12 +60,12 @@ pub fn init() {
     tracing::info!("日志系统初始化完成: {:?}", get_log_path());
 }
 
-/// 返回 latest.log 路径，暴露给前端
+/// 返回 wangyi-mc-checkworld-tauri.latest.log 路径，暴露给前端
 #[tauri::command]
 pub fn get_log_path_command() -> String {
     get_log_path().to_string_lossy().to_string()
 }
-/// 读取 latest.log 当前内容（供前端轮询）
+/// 读取 wangyi-mc-checkworld-tauri.latest.log 当前内容（供前端轮询）
 #[tauri::command]
 pub fn read_log() -> Result<String, String> {
     fs::read_to_string(get_log_path()).map_err(|e| e.to_string())
