@@ -1,9 +1,8 @@
-﻿![wangyi-mc-checkworld-tauri](https://socialify.git.ci/VincentZyuApps/wangyi-mc-checkworld-tauri/image?custom_language=Rust&description=1&font=Source+Code+Pro&forks=1&issues=1&language=1&logo=https%3A%2F%2Ficon.icepanel.io%2FTechnology%2Fsvg%2FTauri.svg&name=1&owner=1&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
-
+﻿![wangyi-mc-checkworld-tauri](https://socialify.git.ci/VincentZyuApps/wangyi-mc-checkworld-tauri/image?custom_language=Rust&description=1&font=JetBrains+Mono&forks=1&issues=1&language=1&logo=https%3A%2F%2Ficon.icepanel.io%2FTechnology%2Fsvg%2FTauri.svg&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
 # MC NetEase World Manager
 
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/VincentZyuApps/wangyi-mc-checkworld-tauri)
-[![Gitee](https://img.shields.io/badge/Gitee-Repository-c41e3a?logo=gitee&logoColor=white)](https://gitee.com/vincent-zyu/wangyi-mc-checkworld-tauri)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/VincentZyuApps/wangyi-mc-checkworld-tauri)
+[![Gitee](https://img.shields.io/badge/Gitee-Repository-c41e3a?style=for-the-badge&logo=gitee&logoColor=white)](https://gitee.com/vincent-zyu/wangyi-mc-checkworld-tauri)
 
 一个用 Rust + Tauri 构建的网易我的世界电脑版存档查看的 gui工具 的仓库。
 > 如果你更喜欢CLI(命令行)，可以去这里：`https://github.com/VincentZyuApps/wangyi-mc-bedrock-check-world`
@@ -31,9 +30,6 @@
 - 📂 **列出存档** - 显示所有存档的名称、文件夹、保存时间和大小
 - 🔍 **搜索过滤** - 按名称或文件夹名搜索
 - 📊 **多种排序** - 按时间、名称、大小排序
-- 💾 **备份存档** - 一键打包为 ZIP 文件
-- ✏️ **重命名存档** - 修改存档显示名称
-- 🗑️ **删除存档** - 安全删除不需要的存档
 - 🎨 **深色主题** - 现代化暗色 UI 界面
 - 📋 **实时日志** - exe 同级目录 latest.log，前端窗口实时查看
 
@@ -42,7 +38,6 @@
 利用 Windows 环境变量动态获取用户应用数据目录，确保跨用户兼容性。
 
 通过环境变量 `%APPDATA%` 自动定位存档目录：`%APPDATA%\MinecraftPC_Netease_PB\minecraftWorlds`，无需手动配置。
-
 
 
 ## 📸预览
@@ -136,3 +131,4 @@ wangyi-mc-checkworld-tauri/
 - 已安装网易我的世界电脑版(基岩互通版)  ↓
 
 ![doc/基岩互通版.png](doc/基岩互通版.png)
+

@@ -1,7 +1,12 @@
+# Temp folders
+temp/
+tmp/
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
+.ruff_cache/
 .venv/
 venv/
 .env

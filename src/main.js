@@ -1,3 +1,5 @@
+import { closeInspect, initInspect } from './inspect/controller.js';
+
 const { invoke } = window.__TAURI__.core;
 
 let allWorlds = [];
@@ -6,6 +8,7 @@ let currentTheme = 'system';
 let currentLocale = 'zh-CN';
 let logInterval = null;
 let lastLogLen = 0;
+let inspectUi = null;
 
 const translations = {
   'zh-CN': {
@@ -34,11 +37,10 @@ const translations = {
     btnCopyRoot: '📋 复制',
     btnOpen: '📁 打开',
     btnCopy: '📋 复制',
+    btnInspect: '查看详情',
     toastPathCopied: '路径已复制',
-    modalCancel: '取消',
+    toastLoadFailed: '加载失败: {error}',
     logWindowTitle: '📝 日志',
-    logPollingStarted: '开始实时日志轮询',
-    logPollingStopped: '日志窗口已关闭',
   },
   'en-US': {
     appTitle: '🎮 MC NetEase World Checker',
@@ -66,16 +68,17 @@ const translations = {
     btnCopyRoot: '📋 Copy',
     btnOpen: '📁 Open',
     btnCopy: '📋 Copy',
+    btnInspect: 'Inspect',
     toastPathCopied: 'Path copied',
-    modalCancel: 'Cancel',
+    toastLoadFailed: 'Load failed: {error}',
     logWindowTitle: '📝 Log',
   }
 };
 
 const themeIcons = {
-  'light': '☀️',
-  'dark': '🌙',
-  'system': '🖥️'
+  light: '☀️',
+  dark: '🌙',
+  system: '🖥️'
 };
 
 function t(key, params = {}) {
@@ -118,14 +121,13 @@ function initTheme() {
     currentTheme = saved;
   }
   applyTheme();
-  
   document.getElementById('theme-btn').addEventListener('click', cycleTheme);
 }
 
 function applyTheme() {
   const themeIcon = document.getElementById('theme-icon');
   themeIcon.textContent = themeIcons[currentTheme];
-  
+
   if (currentTheme === 'system') {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
@@ -190,8 +192,9 @@ function renderWorlds() {
       <td class="col-size">${world.size_formatted}</td>
       <td class="col-actions">
         <div class="action-buttons">
-          <button class="btn btn-secondary btn-small" onclick="openFolder('${escapeJs(world.path)}')">${t('btnOpen')}</button>
-          <button class="btn btn-secondary btn-small" onclick="copyFolderPath('${escapeJs(world.path)}')">${t('btnCopy')}</button>
+          ${inspectUi.renderInspectButton(world)}
+          <button class="btn btn-secondary btn-small" onclick="window.openFolder('${escapeJs(world.path)}')">${t('btnOpen')}</button>
+          <button class="btn btn-secondary btn-small" onclick="window.copyFolderPath('${escapeJs(world.path)}')">${t('btnCopy')}</button>
         </div>
       </td>
     </tr>
@@ -201,7 +204,6 @@ function renderWorlds() {
 function updateStats() {
   const totalCount = filteredWorlds.length;
   const totalSize = filteredWorlds.reduce((sum, w) => sum + w.size, 0);
-
   document.getElementById('total-count').textContent = t('totalCount', { count: totalCount });
   document.getElementById('total-size').textContent = t('totalSize', { size: formatSize(totalSize) });
 }
@@ -210,7 +212,6 @@ function formatSize(bytes) {
   const KB = 1024;
   const MB = KB * 1024;
   const GB = MB * 1024;
-
   if (bytes < KB) return `${bytes.toFixed(2)} B`;
   if (bytes < MB) return `${(bytes / KB).toFixed(2)} KB`;
   if (bytes < GB) return `${(bytes / MB).toFixed(2)} MB`;
@@ -219,7 +220,6 @@ function formatSize(bytes) {
 
 function applySort() {
   const sortValue = document.getElementById('sort-select').value;
-
   filteredWorlds.sort((a, b) => {
     switch (sortValue) {
       case 'time-desc':
@@ -242,16 +242,13 @@ function applySort() {
 
 function applySearch() {
   const query = document.getElementById('search-input').value.toLowerCase().trim();
-
   if (!query) {
     filteredWorlds = [...allWorlds];
   } else {
-    filteredWorlds = allWorlds.filter(w =>
-      w.name.toLowerCase().includes(query) ||
-      w.folder.toLowerCase().includes(query)
+    filteredWorlds = allWorlds.filter((w) =>
+      w.name.toLowerCase().includes(query) || w.folder.toLowerCase().includes(query)
     );
   }
-
   applySort();
   renderWorlds();
   updateStats();
@@ -261,7 +258,7 @@ function updateUITexts() {
   document.getElementById('app-title').textContent = t('appTitle');
   document.getElementById('search-input').placeholder = t('searchPlaceholder');
   document.getElementById('refresh-btn').textContent = t('refreshBtn');
-  
+
   const sortSelect = document.getElementById('sort-select');
   sortSelect.options[0].text = t('sortLatest');
   sortSelect.options[1].text = t('sortOldest');
@@ -269,10 +266,7 @@ function updateUITexts() {
   sortSelect.options[3].text = t('sortNameDesc');
   sortSelect.options[4].text = t('sortSizeDesc');
   sortSelect.options[5].text = t('sortSizeAsc');
-  
-  document.getElementById('total-count').textContent = t('totalCount', { count: filteredWorlds.length });
-  document.getElementById('total-size').textContent = t('totalSize', { size: formatSize(filteredWorlds.reduce((sum, w) => sum + w.size, 0)) });
-  
+
   document.getElementById('th-index').textContent = t('colIndex');
   document.getElementById('th-name').textContent = t('colName');
   document.getElementById('th-folder').textContent = t('colFolder');
@@ -281,8 +275,10 @@ function updateUITexts() {
   document.getElementById('th-actions').textContent = t('colActions');
   document.getElementById('open-root-btn').innerHTML = t('btnOpenRoot');
   document.getElementById('copy-path-btn2').innerHTML = t('btnCopyRoot');
-  
+  document.getElementById('inspect-title').textContent = t('btnInspect');
+
   renderWorlds();
+  updateStats();
 }
 
 function setupEventListeners() {
@@ -292,32 +288,18 @@ function setupEventListeners() {
     renderWorlds();
   });
   document.getElementById('search-input').addEventListener('input', applySearch);
-
-  document.getElementById('locale-select').addEventListener('change', (e) => {
-    setLocale(e.target.value);
-  });
-
+  document.getElementById('locale-select').addEventListener('change', (e) => setLocale(e.target.value));
   document.getElementById('log-btn').addEventListener('click', toggleLogWindow);
   document.getElementById('log-close').addEventListener('click', toggleLogWindow);
 
-  const copyPath = () => {
-    const path = document.getElementById('path-bar-text').textContent;
-    if (path && path !== '—') {
-      navigator.clipboard.writeText(path).then(() => {
-        const toast = document.getElementById('toast');
-        toast.textContent = t('toastPathCopied');
-        toast.className = 'toast';
-        toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 2000);
-      }).catch(() => {});
-    }
-  };
   document.getElementById('open-root-btn').addEventListener('click', () => {
     const path = document.getElementById('path-bar-text').textContent;
-    if (path && path !== '—') openFolder(path);
+    if (path && path !== '—') window.openFolder(path);
   });
-
-  document.getElementById('copy-path-btn2').addEventListener('click', copyPath);
+  document.getElementById('copy-path-btn2').addEventListener('click', () => {
+    const path = document.getElementById('path-bar-text').textContent;
+    if (path && path !== '—') window.copyFolderPath(path);
+  });
 }
 
 function toggleLogWindow() {
@@ -341,23 +323,23 @@ function toggleLogWindow() {
   }
 }
 
-async function openFolder(path) {
+window.openFolder = async function openFolder(path) {
   try {
     await invoke('open_folder', { path });
-  } catch (e) {
-    // silently fail - opening folder is non-critical
-  }
-}
+  } catch (_) {}
+};
 
-function copyFolderPath(path) {
+window.copyFolderPath = function copyFolderPath(path) {
   navigator.clipboard.writeText(path).then(() => {
-    const toast = document.getElementById('toast');
-    toast.textContent = t('toastPathCopied');
-    toast.className = 'toast';
-    toast.classList.remove('hidden');
-    setTimeout(() => toast.classList.add('hidden'), 2000);
+    showToast(t('toastPathCopied'));
   }).catch(() => {});
-}
+};
+
+window.openInspect = async function openInspect(path) {
+  await inspectUi.openInspect(path);
+};
+
+window.closeInspect = closeInspect;
 
 async function fetchLog() {
   try {
@@ -368,9 +350,15 @@ async function fetchLog() {
       logEl.scrollTop = logEl.scrollHeight;
       lastLogLen = content.length;
     }
-  } catch (e) {
-    // ignore read errors while polling
-  }
+  } catch (_) {}
+}
+
+function showToast(message, isError = false) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = `toast${isError ? ' error' : ''}`;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 2200);
 }
 
 function escapeHtml(str) {
@@ -384,6 +372,7 @@ function escapeJs(str) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  inspectUi = initInspect({ t, showToast });
   initLocale();
   initTheme();
   updateUITexts();

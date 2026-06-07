@@ -536,3 +536,7 @@ select:focus {
   color: var(--text-secondary);
   border-radius: 0 0 8px 8px;
 }
+
+body.inspect-open {
+  overflow: hidden;
+}

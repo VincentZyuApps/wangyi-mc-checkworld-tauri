@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MC NetEase World Manager</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="inspect/styles.css">
 </head>
 <body>
   <div class="container">
@@ -90,6 +91,16 @@
     </div>
   </div>
 
-  <script src="main.js"></script>
+  <div id="inspect-overlay" class="inspect-overlay hidden">
+    <div class="inspect-panel">
+      <div class="inspect-header">
+        <h2 id="inspect-title">Inspect</h2>
+        <button id="inspect-close" class="btn btn-secondary btn-small">✕</button>
+      </div>
+      <div id="inspect-content"></div>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>

@@ -2,9 +2,11 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod logger;
+mod inspect;
 mod world;
 
 use logger::get_log_path_command;
+use inspect::inspect_world;
 use world::{
     get_worlds_path, list_worlds, open_folder,
 };
@@ -13,13 +15,14 @@ use logger::read_log;
 fn main() {
     logger::init();
 
-    tracing::info!("WangyiMCCheckworld 启动");
+    tracing::info!("WangyiMCCheckworldTauri 启动");
 
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             get_worlds_path,
             list_worlds,
+            inspect_world,
             open_folder,
             get_log_path_command,
             read_log,

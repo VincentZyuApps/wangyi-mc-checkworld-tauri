@@ -122,13 +122,6 @@ pub fn list_worlds() -> Result<Vec<WorldInfo>, String> {
             size_formatted: format_size(size),
             path: path.to_string_lossy().to_string(),
         });
-
-        tracing::debug!(
-            "发现存档: name={}, folder={}, size={}",
-            world_name,
-            folder_name,
-            format_size(size)
-        );
     }
 
     worlds.sort_by(|a, b| {
@@ -146,14 +139,7 @@ pub fn open_folder(path: String) -> Result<(), String> {
     tracing::info!("打开文件夹: {}", path);
     #[cfg(target_os = "windows")]
     {
-        // Windows explorer 接受两种路径格式：
-        // 1. 带反斜杠: C:\Users\...\folder
-        // 2. 带正斜杠: C:/Users/.../folder  (推荐，避免被当作通配符)
-        // 注意：explorer 对反斜杠路径有时会误判为文件搜索而打开"此电脑"
-        // 所以统一用正斜杠
         let explorer_path = path.replace('\\', "/");
-
-        // 用 cmd /c start 包装，确保路径被正确解释
         std::process::Command::new("cmd")
             .args(["/C", "start", "", &explorer_path])
             .spawn()
