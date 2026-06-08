@@ -80,32 +80,30 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Cache Cargo registry
+      - name: Cache Rust build artifacts
         if: needs.check.outputs.clear_cache != 'true'
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-tauri -> target
+
+      - name: Cache Tauri CLI
+        if: needs.check.outputs.clear_cache != 'true'
+        id: cache-tauri-cli
         uses: actions/cache@v4
         with:
           path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-registry-
-
-      - name: Cache Cargo build
-        if: needs.check.outputs.clear_cache != 'true'
-        uses: actions/cache@v4
-        with:
-          path: src-tauri/target
-          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('src-tauri/src/**') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}-
-            ${{ runner.os }}-cargo-build-
+            ~/.cargo/bin/cargo-tauri.exe
+            ~/.cargo/.crates2.json
+            ~/.cargo/.crates.toml
+          key: ${{ runner.os }}-tauri-cli-v2-2.0.0
 
       - name: Clear cache notice
         if: needs.check.outputs.clear_cache == 'true'
         run: echo "🧹 Building without cache (--clear flag detected)"
 
       - name: Install Tauri CLI
+        if: needs.check.outputs.clear_cache == 'true' || steps.cache-tauri-cli.outputs.cache-hit != 'true'
         run: cargo install tauri-cli --locked
 
       - name: Build Tauri App
