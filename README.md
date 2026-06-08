@@ -5,7 +5,7 @@
 [![Gitee](https://img.shields.io/badge/Gitee-Repository-c41e3a?style=for-the-badge&logo=gitee&logoColor=white)](https://gitee.com/vincent-zyu/wangyi-mc-checkworld-tauri)
 
 一个用 Rust + Tauri 构建的网易我的世界电脑版存档查看的 gui工具 的仓库。
-> 如果你更喜欢CLI(命令行)，可以去这里：`https://github.com/VincentZyuApps/wangyi-mc-bedrock-check-world`
+> 如果你更喜欢CLI(命令行)，可以去这里：[`https://github.com/VincentZyuApps/wangyi-mc-bedrock-check-world`](https://github.com/VincentZyuApps/wangyi-mc-bedrock-check-world)
 
 ## 🛠️ 技术栈
 
