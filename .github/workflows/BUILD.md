@@ -1,6 +1,8 @@
 # 🔧 构建说明 (Build Guide)
 
-本项目使用 GitHub Actions 自动构建，通过 commit message 中的关键词触发不同的构建流程。
+本项目使用 GitHub Actions 自动构建，通过 commit message 中的关键词触发不同的构建流程。版本号自动从 `src-tauri/tauri.conf.json` 读取。
+
+支持手动触发：在 GitHub Actions 页面点击 "Run workflow" 即可选择触发构建或发布。
 
 ## 📌 触发关键词
 
@@ -9,6 +11,7 @@
 | `build action` | 触发构建 | 编译项目并上传 Artifact（可在 Actions 页面下载） |
 | `build release` | 触发发布 | 编译项目并自动创建 GitHub Release |
 | `--clear` | 清除缓存 | 跳过所有缓存，从头开始完整编译 |
+| PR 提交 | 自动构建 | 向 `main` 提 PR 自动触发构建但不发布 |
 
 ## 🎯 使用示例
 
@@ -80,6 +83,54 @@ git commit -m "refactor: 重构代码"
 
 ---
 
+## 🏗️ 流水线阶段
+
+```
+check ──→ build ──→ release
+  │         │         │
+  │         │         └─ 下载构建产物
+  │         │            替换模板中的 {{version}}
+  │         │            创建 GitHub Release
+  │         │            上传 exe + msi + zip
+  │         │
+  │         └─ 编译 Tauri 应用 (Rust)
+  │            打包 exe / msi / zip
+  │            上传 3 种构建产物
+  │
+  ├─ 解析 commit 关键词 (build action / build release / --clear)
+  ├─ 从 tauri.conf.json 提取版本号
+  └─ PR 提交自动触发构建（不发布）
+```
+
+```mermaid
+flowchart TB
+    subgraph check["① check - 触发检查"]
+        C1[解析 commit 关键词]
+        C2[从 tauri.conf.json 提取版本号]
+    end
+
+    subgraph build["② build - 编译构建"]
+        B1[编译 Tauri 应用]
+        B2[打包 exe / msi / zip]
+        B3[上传 3 种构建产物]
+    end
+
+    subgraph release["③ release - 发布 Release"]
+        R1[下载构建产物]
+        R2[替换模板中的版本号]
+        R3[创建 GitHub Release]
+        R4[上传 exe + msi + zip 到 Release Assets]
+    end
+
+    C1 --> C2
+    C2 --"build action / build release"--> B1
+    C2 --"PR 提交"--> B1
+    B1 --> B2 --> B3
+    B3 --> R1 --> R2 --> R3 --> R4
+```
+
+---
+
 ## ⏱️ 构建时间参考
 
 | 场景 | 预计时间 |
@@ -92,13 +143,15 @@ git commit -m "refactor: 重构代码"
 
 ## 📦 构建产物
 
-构建成功后会生成：
+构建成功后会生成 3 种产物（文件名中的 `v{version}` 自动替换为实际版本）：
 
-```
-mc-netease-world-manager-windows-x64.zip
-├── mc-netease-world-manager.exe    # 主程序
-└── README.md                        # 说明文档
-```
+| 类型 | 文件名 | 说明 |
+|------|--------|------|
+| EXE | `wangyi-mc-checkworld-v{version}-windows-x64.exe` | 独立可执行文件，直接运行 |
+| MSI | `wangyi-mc-checkworld-v{version}-windows-x64.msi` | Windows 安装程序 |
+| ZIP | `wangyi-mc-checkworld-v{version}-windows-x64-green.zip` | 便携压缩包（解压后运行 exe） |
+
+Release 发布时会同时上传以上 3 个文件到 Release Assets。
 
 ## 🧾 Release 文案模板
 

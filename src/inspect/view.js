@@ -1,9 +1,30 @@
+import { getLabelHint, getSectionHint, inspectT } from './i18n.js';
+
+function renderSectionHeading(level, title) {
+  const hint = getSectionHint(title);
+  const tag = level === 4 ? 'h4' : 'h3';
+  return `
+    <div class="inspect-heading">
+      <${tag}>${title}</${tag}>
+      ${hint ? `<div class="inspect-heading-hint">${escapeHtml(hint)}</div>` : ''}
+    </div>
+  `;
+}
+
+function renderLabel(label) {
+  const hint = getLabelHint(label);
+  return `
+    <div class="inspect-label-main">${label}</div>
+    ${hint ? `<div class="inspect-label-hint">${escapeHtml(hint)}</div>` : ''}
+  `;
+}
+
 function renderKeyValueGrid(entries) {
   return `
     <div class="inspect-grid">
       ${entries.map(([label, value]) => `
         <div class="inspect-field">
-          <div class="inspect-label">${label}</div>
+          <div class="inspect-label">${renderLabel(label)}</div>
           <div class="inspect-value">${formatValue(value)}</div>
         </div>
       `).join('')}
@@ -28,20 +49,20 @@ function formatValue(value) {
 function renderContainer(name, container) {
   return `
     <section class="inspect-card">
-      <h3>${name}</h3>
-      <p class="inspect-meta">Slots: ${container.total_slots_seen} · Non-empty: ${container.non_empty_count}</p>
+      ${renderSectionHeading(3, name)}
+      <p class="inspect-meta">${inspectT('slotsMeta', { slots: container.total_slots_seen, count: container.non_empty_count })}</p>
       ${
         container.non_empty_items.length
           ? `<div class="inspect-item-list">${container.non_empty_items.map(item => `
               <article class="inspect-item">
                 <div class="inspect-item-title">${escapeHtml(item.Name || 'Unnamed Item')}</div>
-                <div class="inspect-item-meta">Count: ${item.Count ?? 0} · Damage: ${item.Damage ?? 0} · Slot: ${item.Slot ?? '—'}</div>
+                <div class="inspect-item-meta">${inspectT('itemMeta', { count: item.Count ?? 0, damage: item.Damage ?? 0, slot: item.Slot ?? '—' })}</div>
                 ${item.tag_keys ? `<div class="inspect-tags">${item.tag_keys.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
                 ${item.Block ? `<pre class="inspect-json">${escapeHtml(JSON.stringify(item.Block, null, 2))}</pre>` : ''}
-                ${item.CanPlaceOn ? `<div class="inspect-item-meta">CanPlaceOn: ${escapeHtml(JSON.stringify(item.CanPlaceOn))}</div>` : ''}
+                ${item.CanPlaceOn ? `<div class="inspect-item-meta">${escapeHtml(inspectT('itemCanPlaceOn', { value: JSON.stringify(item.CanPlaceOn) }))}</div>` : ''}
               </article>
             `).join('')}</div>`
-          : `<p class="inspect-empty">No items</p>`
+          : `<p class="inspect-empty">${inspectT('noItems')}</p>`
       }
     </section>
   `;
@@ -81,6 +102,12 @@ export function renderInspectContent(data) {
     ['Behavior Packs', data.netease.behavior_pack_count],
     ['Resource Packs', data.netease.resource_pack_count],
   ];
+  const summaryLabelMap = {
+    keepinventory: 'keepinventory',
+    neteaseEncryptFlag: 'neteaseEncryptFlag',
+    pvp: 'pvp',
+    showcoordinates: 'showcoordinates',
+  };
   const levelEntries = Object.entries(data.leveldat.summary || {});
   const playerEntries = data.player ? [
     ['Source Log', data.player.source_log],
@@ -97,7 +124,7 @@ export function renderInspectContent(data) {
     <div class="inspect-scroll">
       <div class="inspect-hero">
         <div>
-          <div class="inspect-kicker">Inspect</div>
+          <div class="inspect-kicker">${inspectT('inspectKicker')}</div>
           <h2>${escapeHtml(data.basic.world_name)}</h2>
           <p>${escapeHtml(data.basic.folder)}</p>
         </div>
@@ -105,25 +132,25 @@ export function renderInspectContent(data) {
 
       <div class="inspect-layout">
         <section class="inspect-card">
-          <h3>Basic</h3>
+          ${renderSectionHeading(3, 'Basic')}
           ${renderKeyValueGrid(basicEntries)}
         </section>
 
         <section class="inspect-card">
-          <h3>NetEase</h3>
+          ${renderSectionHeading(3, 'NetEase')}
           ${renderKeyValueGrid(neteaseEntries)}
           <pre class="inspect-json">${escapeHtml(JSON.stringify(data.netease.world_record_summary, null, 2))}</pre>
         </section>
 
         <section class="inspect-card inspect-span-2">
-          <h3>level.dat</h3>
-          ${renderKeyValueGrid(levelEntries)}
+          ${renderSectionHeading(3, 'level.dat')}
+          ${renderKeyValueGrid(levelEntries.map(([label, value]) => [summaryLabelMap[label] || label, value]))}
           <div class="inspect-subsection">
-            <h4>Abilities</h4>
+            ${renderSectionHeading(4, 'Abilities')}
             <pre class="inspect-json">${escapeHtml(JSON.stringify(data.leveldat.abilities, null, 2))}</pre>
           </div>
           <div class="inspect-subsection">
-            <h4>Experiments</h4>
+            ${renderSectionHeading(4, 'Experiments')}
             <pre class="inspect-json">${escapeHtml(JSON.stringify(data.leveldat.experiments, null, 2))}</pre>
           </div>
         </section>
@@ -131,10 +158,10 @@ export function renderInspectContent(data) {
         ${
           data.player
             ? `<section class="inspect-card inspect-span-2">
-                <h3>Player</h3>
+                ${renderSectionHeading(3, 'Player')}
                 ${renderKeyValueGrid(playerEntries)}
                 <div class="inspect-subsection">
-                  <h4>Attributes</h4>
+                  ${renderSectionHeading(4, 'Attributes')}
                   <pre class="inspect-json">${escapeHtml(JSON.stringify(data.player.attributes, null, 2))}</pre>
                 </div>
                 ${data.player.parse_warning ? `<p class="inspect-warning">${escapeHtml(data.player.parse_warning)}</p>` : ''}

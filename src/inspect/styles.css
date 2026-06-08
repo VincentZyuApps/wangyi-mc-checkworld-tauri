@@ -90,9 +90,19 @@
   grid-column: span 2;
 }
 
-.inspect-card h3,
-.inspect-subsection h4 {
+.inspect-heading {
   margin-bottom: 12px;
+}
+
+.inspect-heading h3,
+.inspect-heading h4 {
+  margin: 0 0 4px 0;
+}
+
+.inspect-heading-hint {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 .inspect-grid {
@@ -112,6 +122,20 @@
   font-size: 0.78rem;
   color: var(--text-secondary);
   margin-bottom: 6px;
+}
+
+.inspect-label-main {
+  color: var(--text-primary);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.inspect-label-hint {
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-style: italic;
+  line-height: 1.35;
 }
 
 .inspect-value {
