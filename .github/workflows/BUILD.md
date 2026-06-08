@@ -100,6 +100,20 @@ mc-netease-world-manager-windows-x64.zip
 └── README.md                        # 说明文档
 ```
 
+## 🧾 Release 文案模板
+
+GitHub Release 的正文文案已单独拆到：
+
+`./.github/workflows/release-template.md`
+
+这样以后如果你想单独调整：
+
+- `📦 二进制形式说明`
+- `✨ 功能`
+- `🖥️ 系统要求`
+
+只需要改这个 Markdown 文件，不需要再直接修改 `build.yml`。
+
 ---
 
 ## 🔗 相关链接

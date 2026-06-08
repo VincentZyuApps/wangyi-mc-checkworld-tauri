@@ -130,5 +130,6 @@ wangyi-mc-checkworld-tauri/
 - Windows 10/11 x64 (仅支持 64 位)
 - 已安装网易我的世界电脑版(基岩互通版)  ↓
 
-![doc/基岩互通版.png](doc/基岩互通版.png)
+![网易我的世界电脑版（基岩互通版）](https://raw.githubusercontent.com/VincentZyuApps/wangyi-mc-checkworld-tauri/main/doc/%E5%9F%BA%E5%B2%A9%E4%BA%92%E9%80%9A%E7%89%88.png)
+
 

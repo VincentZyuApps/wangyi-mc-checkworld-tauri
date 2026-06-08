@@ -173,30 +173,24 @@ jobs:
       - name: List downloaded files
         run: find artifacts -type f
 
+      - name: Prepare release body
+        id: release_body
+        run: |
+          VERSION="${{ needs.check.outputs.version }}"
+          BODY=$(cat .github/workflows/release-template.md)
+          BODY="${BODY//\{\{version\}\}/$VERSION}"
+          {
+            echo "body<<EOF"
+            echo "$BODY"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ needs.check.outputs.version }}
           name: Release v${{ needs.check.outputs.version }}
-          body: |
-            ## 网易MC检查世界 v${{ needs.check.outputs.version }}
-
-            ### 📦 二进制形式说明
-            - **绿色版.zip**: 便携版，解压后运行 exe
-            - **exe**: 便携版，直接运行 `wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64.exe` 即可
-            - **msi**: Windows 安装程序
-
-            ### ✨ 功能
-            - 📂 列出所有网易MC存档
-            - 🔍 搜索和排序
-            - 📁 打开存档文件夹
-            - 📋 复制存档路径
-            - 📝 实时查看运行日志
-            - 🎨 支持明暗UI主题
-
-            ### 🖥️ 系统要求
-            - Windows 10/11 x64 (仅支持 64 位)
-            - 已安装网易我的世界电脑版
+          body: ${{ steps.release_body.outputs.body }}
           files: |
             artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-exe/*.exe
             artifacts/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64-msi/wangyi-mc-checkworld-v${{ needs.check.outputs.version }}-windows-x64.msi

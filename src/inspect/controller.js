@@ -16,7 +16,7 @@ export function initInspect({ t, showToast }) {
 
   return {
     renderInspectButton(world) {
-      return `<button class="btn btn-secondary btn-small" onclick="window.openInspect('${escapeJs(world.path)}')">${t('btnInspect')}</button>`;
+      return `<button class="btn btn-secondary btn-small" onclick="window.openInspect('${escapeJs(world.path)}')">🔍 ${t('btnInspect')}</button>`;
     },
     async openInspect(path) {
       const content = document.getElementById('inspect-content');
@@ -25,11 +25,14 @@ export function initInspect({ t, showToast }) {
       overlayEl.classList.remove('hidden');
       document.body.classList.add('inspect-open');
       content.innerHTML = '<div class="inspect-loading">Loading inspect data...</div>';
+      console.time(`inspect:${path}`);
       try {
         const data = await inspectWorld(path);
         if (activeInspectPath !== path) return;
         content.innerHTML = renderInspectContent(data);
+        console.timeEnd(`inspect:${path}`);
       } catch (error) {
+        console.timeEnd(`inspect:${path}`);
         content.innerHTML = `<div class="inspect-error">${escapeHtml(String(error))}</div>`;
         showToast(`Inspect failed: ${error}`, true);
       }
@@ -52,3 +55,4 @@ function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
+

@@ -2,6 +2,7 @@ use serde_json::Value;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::time::Instant;
 use walkdir::WalkDir;
 
 use crate::world::format_size;
@@ -54,7 +55,9 @@ fn folder_size(path: &Path) -> u64 {
 
 #[tauri::command]
 pub fn inspect_world(path: String) -> Result<WorldInspectResult, String> {
+    let started = Instant::now();
     let world_path = PathBuf::from(&path);
+    tracing::info!("inspect_world start: {}", world_path.display());
     let folder = world_path
         .file_name()
         .unwrap_or_default()
@@ -64,6 +67,7 @@ pub fn inspect_world(path: String) -> Result<WorldInspectResult, String> {
         .unwrap_or_else(|_| "Unknown".to_string())
         .trim()
         .to_string();
+    let basic_started = Instant::now();
     let folder_size = folder_size(&world_path);
     let mut warnings = Vec::new();
 
@@ -79,7 +83,13 @@ pub fn inspect_world(path: String) -> Result<WorldInspectResult, String> {
         has_level_dat: world_path.join("level.dat").exists(),
         has_level_dat_old: world_path.join("level.dat_old").exists(),
     };
+    tracing::info!(
+        "inspect_world basic ready: folder={} elapsed_ms={}",
+        basic.folder,
+        basic_started.elapsed().as_millis()
+    );
 
+    let netease_started = Instant::now();
     let config_value = fs::read_to_string(world_path.join("config"))
         .ok()
         .and_then(|text| serde_json::from_str::<Value>(&text).ok())
@@ -105,11 +115,23 @@ pub fn inspect_world(path: String) -> Result<WorldInspectResult, String> {
         behavior_packs,
         resource_packs,
     };
+    tracing::info!(
+        "inspect_world netease ready: folder={} elapsed_ms={}",
+        basic.folder,
+        netease_started.elapsed().as_millis()
+    );
 
+    let leveldat_started = Instant::now();
     let (nbt_offset, level_payload_value) = parse_leveldat_value(&world_path.join("level.dat"))?;
     let level_payload = value_object(&level_payload_value).ok_or("level.dat root payload is not an object")?;
     let leveldat = leveldat_section(level_payload, nbt_offset);
+    tracing::info!(
+        "inspect_world leveldat ready: folder={} elapsed_ms={}",
+        basic.folder,
+        leveldat_started.elapsed().as_millis()
+    );
 
+    let player_started = Instant::now();
     let (player, inventory) = match parse_local_player_value(&world_path) {
         Ok((source_log, payload_value)) => {
             if let Some(payload) = value_object(&payload_value) {
@@ -125,8 +147,17 @@ pub fn inspect_world(path: String) -> Result<WorldInspectResult, String> {
             (None, None)
         }
     };
+    tracing::info!(
+        "inspect_world player/inventory ready: folder={} elapsed_ms={}",
+        basic.folder,
+        player_started.elapsed().as_millis()
+    );
 
-    let db_patterns = db_patterns_for_world(&world_path);
+    tracing::info!(
+        "inspect_world done: folder={} total_elapsed_ms={}",
+        basic.folder,
+        started.elapsed().as_millis()
+    );
 
     Ok(WorldInspectResult {
         basic,
@@ -134,7 +165,9 @@ pub fn inspect_world(path: String) -> Result<WorldInspectResult, String> {
         leveldat,
         player,
         inventory,
-        db_patterns,
+        db_patterns: None,
         warnings,
     })
 }
+
+
