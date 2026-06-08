@@ -1,9 +1,6 @@
-use chrono::Local;
-use std::fs::{self, OpenOptions};
-use std::io::Write;
+use std::fs;
 use std::path::PathBuf;
 use std::sync::Mutex;
-use tracing::Level;
 use tracing_appender::non_blocking::WorkerGuard;
 use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
@@ -69,12 +66,4 @@ pub fn get_log_path_command() -> String {
 #[tauri::command]
 pub fn read_log() -> Result<String, String> {
     fs::read_to_string(get_log_path()).map_err(|e| e.to_string())
-}
-/// 追加一行原始日志（不走 tracing 格式，直接写文件）
-pub fn append_raw(line: &str) {
-    let path = get_log_path();
-    if let Ok(mut file) = OpenOptions::new().create(true).append(true).open(&path) {
-        let ts = Local::now().format("%Y-%m-%d %H:%M:%S%.3f");
-        let _ = writeln!(file, "[{}] {}", ts, line);
-    }
 }

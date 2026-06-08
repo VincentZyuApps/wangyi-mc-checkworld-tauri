@@ -9,7 +9,6 @@ pub struct WorldInspectResult {
     pub leveldat: InspectLevelDatInfo,
     pub player: Option<InspectPlayerInfo>,
     pub inventory: Option<InspectInventoryInfo>,
-    pub db_patterns: Option<InspectDbPatterns>,
     pub warnings: Vec<String>,
 }
 
@@ -72,10 +71,4 @@ pub struct InspectInventoryInfo {
     pub source_log: Option<String>,
     pub containers: BTreeMap<String, InspectInventoryContainer>,
     pub parse_warning: Option<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct InspectDbPatterns {
-    pub categories: BTreeMap<String, Vec<String>>,
-    pub file_counts: BTreeMap<String, BTreeMap<String, usize>>,
 }

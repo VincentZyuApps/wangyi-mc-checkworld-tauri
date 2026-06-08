@@ -23,10 +23,6 @@ fn get_worlds_dir() -> PathBuf {
         .join("minecraftWorlds")
 }
 
-pub fn worlds_dir() -> PathBuf {
-    get_worlds_dir()
-}
-
 pub fn format_size(bytes: u64) -> String {
     const KB: u64 = 1024;
     const MB: u64 = KB * 1024;

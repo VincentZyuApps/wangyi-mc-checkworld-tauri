@@ -68,25 +68,6 @@ function renderContainer(name, container) {
   `;
 }
 
-function renderPatternSection(dbPatterns) {
-  if (!dbPatterns) return '';
-  return `
-    <section class="inspect-card inspect-span-2">
-      <h3>DB Patterns</h3>
-      <div class="inspect-grid">
-        ${Object.entries(dbPatterns.categories).map(([name, samples]) => `
-          <div class="inspect-field">
-            <div class="inspect-label">${escapeHtml(name)}</div>
-            <div class="inspect-value">
-              <pre class="inspect-json">${escapeHtml(JSON.stringify(samples.slice(0, 10), null, 2))}</pre>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </section>
-  `;
-}
-
 export function renderInspectContent(data) {
   const basicEntries = [
     ['Folder', data.basic.folder],
@@ -174,8 +155,6 @@ export function renderInspectContent(data) {
             ? Object.entries(data.inventory.containers).map(([name, container]) => renderContainer(name, container)).join('')
             : ''
         }
-
-        ${renderPatternSection(data.db_patterns)}
       </div>
     </div>
   `;

@@ -7,7 +7,6 @@ use walkdir::WalkDir;
 
 use crate::world::format_size;
 
-use super::db::db_patterns_for_world;
 use super::leveldat::{leveldat_section, parse_leveldat_value};
 use super::nbt::value_object;
 use super::player::{parse_local_player_value, player_sections};
@@ -165,7 +164,6 @@ pub fn inspect_world(path: String) -> Result<WorldInspectResult, String> {
         leveldat,
         player,
         inventory,
-        db_patterns: None,
         warnings,
     })
 }
