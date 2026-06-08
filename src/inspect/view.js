@@ -120,7 +120,10 @@ export function renderInspectContent(data) {
         <section class="inspect-card">
           ${renderSectionHeading(3, 'NetEase')}
           ${renderKeyValueGrid(neteaseEntries)}
-          <pre class="inspect-json">${escapeHtml(JSON.stringify(data.netease.world_record_summary, null, 2))}</pre>
+          <div class="inspect-subsection inspect-subsection-spaced">
+            ${renderSectionHeading(4, 'World Record Summary')}
+            <pre class="inspect-json">${escapeHtml(JSON.stringify(data.netease.world_record_summary, null, 2))}</pre>
+          </div>
         </section>
 
         <section class="inspect-card inspect-span-2">

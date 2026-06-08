@@ -11,6 +11,7 @@ const texts = {
     itemCanPlaceOn: '可放置于: {value}',
     sectionHintBasic: '⭐ 基本信息',
     sectionHintNetEase: '🧩 网易附加配置',
+    sectionHintWorldRecordSummary: '📜 网易 world_record 摘要',
     sectionHintLevelDat: '🧱 世界核心元数据',
     sectionHintPlayer: '🧍 本地玩家状态',
     sectionHintAbilities: '🛠️ 玩家能力配置',
@@ -67,6 +68,7 @@ const texts = {
     itemCanPlaceOn: 'Can place on: {value}',
     sectionHintBasic: '⭐ Basic Information',
     sectionHintNetEase: '🧩 NetEase Sidecar Info',
+    sectionHintWorldRecordSummary: '📜 NetEase world_record Summary',
     sectionHintLevelDat: '🧱 Core World Metadata',
     sectionHintPlayer: '🧍 Local Player State',
     sectionHintAbilities: '🛠️ Player Ability Settings',
@@ -118,6 +120,7 @@ const texts = {
 const sectionHintMap = {
   Basic: 'sectionHintBasic',
   NetEase: 'sectionHintNetEase',
+  'World Record Summary': 'sectionHintWorldRecordSummary',
   'level.dat': 'sectionHintLevelDat',
   Player: 'sectionHintPlayer',
   Abilities: 'sectionHintAbilities',
