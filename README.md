@@ -30,6 +30,7 @@
 - 📂 **列出存档** - 显示所有存档的名称、文件夹、保存时间和大小
 - 🔍 **搜索过滤** - 按名称或文件夹名搜索
 - 📊 **多种排序** - 按时间、名称、大小排序
+- 🔎 **Inspect 详情页** - 查看 `level.dat`、网易 sidecar、玩家状态、背包内容等信息
 - 🎨 **深色主题** - 现代化暗色 UI 界面
 - 📋 **实时日志** - exe 同级目录 latest.log，前端窗口实时查看
 
@@ -42,7 +43,21 @@
 
 ## 📸预览
 
-![应用预览](doc/preview.png)
+### 首页
+
+![首页预览](doc/preview.home.png)
+
+### Inspect 详情页
+
+Inspect 页面会在原页面上方以模糊背景 overlay 方式打开，当前已经支持：
+
+- `Basic` 世界基础信息
+- `NetEase` 网易附加配置和 `world_record` 摘要
+- `level.dat` 核心元数据、能力、实验开关
+- `Player` 本地玩家坐标、属性、死亡点
+- `Inventory` 背包、末影箱、主手、副手内容
+
+![Inspect 详情页预览](doc/preview.inspect.png)
 
 ## 📦 下载安装
 
@@ -106,15 +121,23 @@ git commit -m "fix: rebuild - build action --clear"
 wangyi-mc-checkworld-tauri/
 ├── src/                    # 前端文件
 │   ├── index.html
+│   ├── i18n.js
 │   ├── main.js
-│   └── styles.css
+│   ├── styles.css
+│   └── inspect/
+│       ├── controller.js
+│       ├── i18n.js
+│       ├── service.js
+│       ├── styles.css
+│       └── view.js
 ├── src-tauri/              # Rust 后端
 │   ├── Cargo.toml
 │   ├── tauri.conf.json
 │   └── src/
 │       ├── main.rs         # 入口 + 模块引入
 │       ├── logger.rs       # tracing 日志系统
-│       └── world.rs        # 存档查看
+│       ├── world.rs        # 存档列表查看
+│       └── inspect/        # Inspect 详情解析
 ├── .github/
 │   └── workflows/
 │       └── build.yml       # GitHub Actions
